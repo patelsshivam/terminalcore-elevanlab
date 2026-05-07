@@ -1,0 +1,333 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Terminalcore Color Palette */
+  --background: oklch(0.05 0 0);
+  --foreground: oklch(0.85 0.18 142);
+  --card: oklch(0.08 0 0);
+  --card-foreground: oklch(0.85 0.18 142);
+  --popover: oklch(0.08 0 0);
+  --popover-foreground: oklch(0.85 0.18 142);
+  --primary: oklch(0.85 0.18 142);
+  --primary-foreground: oklch(0.05 0 0);
+  --secondary: oklch(0.15 0 0);
+  --secondary-foreground: oklch(0.7 0.15 142);
+  --muted: oklch(0.12 0 0);
+  --muted-foreground: oklch(0.5 0.1 142);
+  --accent: oklch(0.75 0.2 85);
+  --accent-foreground: oklch(0.05 0 0);
+  --destructive: oklch(0.6 0.2 25);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.25 0.08 142);
+  --input: oklch(0.1 0 0);
+  --ring: oklch(0.85 0.18 142);
+  --radius: 0px;
+  
+  /* Terminal-specific colors */
+  --terminal-green: oklch(0.85 0.18 142);
+  --terminal-dim: oklch(0.5 0.1 142);
+  --terminal-bright: oklch(0.95 0.2 142);
+  --terminal-amber: oklch(0.75 0.2 85);
+  --terminal-cyan: oklch(0.75 0.15 195);
+  --terminal-red: oklch(0.65 0.2 25);
+  --terminal-bg: oklch(0.05 0 0);
+  --terminal-surface: oklch(0.08 0 0);
+  --scanline-opacity: 0.03;
+  --glow-intensity: 0.5;
+}
+
+@theme inline {
+  --font-sans: 'JetBrains Mono', 'Fira Code', monospace;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  
+  /* Custom terminal colors */
+  --color-terminal-green: var(--terminal-green);
+  --color-terminal-dim: var(--terminal-dim);
+  --color-terminal-bright: var(--terminal-bright);
+  --color-terminal-amber: var(--terminal-amber);
+  --color-terminal-cyan: var(--terminal-cyan);
+  --color-terminal-red: var(--terminal-red);
+  --color-terminal-bg: var(--terminal-bg);
+  --color-terminal-surface: var(--terminal-surface);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--terminal-bg);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--terminal-dim);
+    border: 1px solid var(--terminal-green);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--terminal-green);
+  }
+  
+  /* Selection color */
+  ::selection {
+    background: var(--terminal-green);
+    color: var(--terminal-bg);
+  }
+}
+
+/* Scanline overlay effect */
+.scanlines {
+  position: relative;
+}
+.scanlines::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.1) 2px,
+    rgba(0, 0, 0, 0.1) 4px
+  );
+  pointer-events: none;
+  z-index: 100;
+}
+
+/* CRT screen effect */
+.crt-effect {
+  animation: crt-flicker 0.15s infinite;
+  text-shadow: 
+    0 0 2px var(--terminal-green),
+    0 0 4px var(--terminal-green),
+    0 0 8px rgba(0, 255, 65, 0.3);
+}
+
+@keyframes crt-flicker {
+  0% { opacity: 0.97; }
+  50% { opacity: 1; }
+  100% { opacity: 0.98; }
+}
+
+/* Text glow effect */
+.text-glow {
+  text-shadow: 
+    0 0 4px currentColor,
+    0 0 8px currentColor,
+    0 0 16px currentColor;
+}
+
+.text-glow-subtle {
+  text-shadow: 
+    0 0 2px currentColor,
+    0 0 4px currentColor;
+}
+
+/* Cursor blink animation */
+@keyframes cursor-blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.cursor-blink {
+  animation: cursor-blink 1s step-end infinite;
+}
+
+/* Typing animation */
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+/* Glitch effect */
+@keyframes glitch {
+  0% {
+    clip-path: inset(40% 0 61% 0);
+    transform: translate(-2px, 2px);
+  }
+  20% {
+    clip-path: inset(92% 0 1% 0);
+    transform: translate(2px, -2px);
+  }
+  40% {
+    clip-path: inset(43% 0 1% 0);
+    transform: translate(-2px, 2px);
+  }
+  60% {
+    clip-path: inset(25% 0 58% 0);
+    transform: translate(2px, -2px);
+  }
+  80% {
+    clip-path: inset(54% 0 7% 0);
+    transform: translate(-2px, 2px);
+  }
+  100% {
+    clip-path: inset(58% 0 43% 0);
+    transform: translate(2px, -2px);
+  }
+}
+
+.glitch {
+  position: relative;
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.glitch::before {
+  animation: glitch 2s infinite linear alternate-reverse;
+  color: var(--terminal-cyan);
+  z-index: -1;
+}
+
+.glitch::after {
+  animation: glitch 3s infinite linear alternate-reverse;
+  color: var(--terminal-red);
+  z-index: -2;
+}
+
+/* Matrix rain background */
+@keyframes matrix-fall {
+  0% {
+    transform: translateY(-100%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+}
+
+/* Pulse animation for status indicators */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 4px currentColor;
+  }
+  50% {
+    box-shadow: 0 0 12px currentColor, 0 0 20px currentColor;
+  }
+}
+
+.pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Border glow effect */
+.border-glow {
+  box-shadow: 
+    inset 0 0 20px rgba(0, 255, 65, 0.05),
+    0 0 8px rgba(0, 255, 65, 0.2);
+}
+
+/* ASCII box drawing */
+.ascii-box {
+  border: 1px solid var(--terminal-green);
+  position: relative;
+}
+
+.ascii-box::before {
+  content: '┌';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  color: var(--terminal-green);
+}
+
+.ascii-box::after {
+  content: '┐';
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  color: var(--terminal-green);
+}
+
+/* Loading bar animation */
+@keyframes loading-bar {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+/* Noise texture overlay */
+.noise-overlay {
+  position: relative;
+}
+
+.noise-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.02;
+  pointer-events: none;
+  z-index: 50;
+}
+
+/* Boot sequence animation */
+@keyframes boot-line {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.boot-line {
+  animation: boot-line 0.3s ease-out forwards;
+  opacity: 0;
+}
+
+/* Horizontal scan line moving effect */
+@keyframes h-scan {
+  0% { top: 0%; }
+  100% { top: 100%; }
+}
+
+.h-scan::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--terminal-green), transparent);
+  opacity: 0.3;
+  animation: h-scan 8s linear infinite;
+  z-index: 100;
+  pointer-events: none;
+}
